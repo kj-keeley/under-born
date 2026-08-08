@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# Common generated folders
+node_modules/
+dist/
+coverage/
+
+# Temporary files
+*.log
+*.tmp
