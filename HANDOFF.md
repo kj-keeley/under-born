@@ -1,5 +1,8 @@
 # 引き継ぎ
 
+> **2026-09-03 設定（Claude）**：中断解除。便は Kevin 待ち無しで連続、判断は「暫定」行で進める、Kevin は最終決定4つのみ。詳細は `DECISIONS.md` 運用・体制 2026-09-03 と `TASKS.md`。2026-09-05 に Codex が内容を確認し、正典へ反映。
+
+
 ## 現在の状況
 
 - GitHub: `kj-keeley/under-born` / `main`
