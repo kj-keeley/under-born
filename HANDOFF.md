@@ -11,6 +11,11 @@
 - 第7B-b便は実装と便単位のブラウザ確認を完了。女神 v2 の問い・拒否・回想台詞は Kevin の最終稿待ち
 - 次は第7C便。発注文が `docs/orders/` に無いため、ここで止まる
 
+## Claude 検品（2026-09-06・第7B-b便）
+
+- 差分：正典の詩7本（ask 含む）は不変、追加は `land` 4本のみ。クリア記録は通常クリア経路（L1357）で1回、`startSurfaceEnding(registerDungeonClear(curTheme))` の形。デバッグ経路は登録なし。ミニマップは `breathMinimapAlpha` で息止め中のみ、`mapBtn2` は消えている。敵紹介の既読は `campaign.seenEnemyIntros` に保存・復元、`startTheme` の clear は無し。真の姿のタイマーは `chainPause<=0` のときだけ進む。教えは同じ敵で距離と `los` を見て、息止め中は出ない。配下上限は `normalMinionCap()`（息吹で2倍）で生成と表示が共通。息吹は `CORES.breath`、`CORE_REWARDS.forest='breath'`。孵化は `ubTitleEgg`。レビュー用 Sol の9点はすべて反映されている。
+- 発注文どおり。push して正典に。
+
 ## 反映内容（2026-09-06・第7B-b便）
 
 1. 最終階クリア時に進行を1回だけ保存し、その結果を地上演出へ渡した。デバッグ地上演出は保存しない
