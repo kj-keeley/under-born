@@ -21,8 +21,11 @@ Codexへ渡した／渡す実装指示書の保管場所です。
 | `2026-08-11_7B-b1_v3.md` | 第7B-b1便 | v3 | **実装済み・通し検品待ち** | `game/underborn_scout7bb.html`へ反映。息止め表現と光・秒数調整 |
 | `2026-08-11_7B-b2_v3.md` | 第7B-b2便 | v3 | **実装済み・数値確定待ち** | `game/underborn_scout7bc.html`へ反映。息止め中の通常移動比率を0〜1で調整可能にした |
 | `2026-08-11_7B-b3_v4.md` | 第7B-b3便 | v4 | **実装済み・数値確定待ち** | `game/underborn_scout7bd.html`へ反映。見失い探索・座標回避・炎上停止を修正 |
-| `2026-09-05_goddess_v1.md` | 女神便 | v1 | **実装済み・手触り確認待ち** | `game/underborn_scout7be.html`へ反映。女神を遊び画面に出し、吹き出しで正典の詩5本を喋らせる |
-| `2026-09-06_goddess-hotfix_v1.md` | 女神便 hotfix | v1 | **実装済み** | `game/underborn_scout7bf.html`へ反映。吹き出しの身体回避、段階的な登退場、一行送りと「▼」を追加 |
+| `2026-09-05_goddess_v1.md` | 女神便 | v1 | **v2で置き換え** | `game/underborn_scout7be.html`へ反映。女神を遊び画面に出し、吹き出しで正典の詩5本を喋らせる |
+| `2026-09-06_goddess-hotfix_v1.md` | 女神便 hotfix | v1 | **v2で置き換え** | `game/underborn_scout7bf.html`へ反映。吹き出しの身体回避、段階的な登退場、一行送りと「▼」を追加 |
+| `2026-09-06_goddess_v2.md` | 女神便 | v2 | **実装済み・台詞最終稿待ち** | `game/underborn_scout7bg.html`へ反映。「声が先、姿はあと」、下窓の文字送り、はい／いいえ、拒否記憶を追加 |
+| `2026-09-06_7B-b_v1.md` | 第7B-b便 | v1 | **上書き済み** | レビュー用 Sol の指摘9点（記録の位置・デバッグ経路・showEnding の報酬表示・土地詩のフェーズと入力・孵化の置き場・配下上限のヘルパー・seenEnemyIntros の clear・シネマティック対象・chainPause・los の引数）|
+| `2026-09-06_7B-b_v2.md` | 第7B-b便 | v2 | **レビュー済み → 実装** | v1 の指摘を反映。出力 `game/underborn_scout7bh.html` |
 
 ## 便の分割について
 
