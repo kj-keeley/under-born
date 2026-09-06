@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>女神 v3 — マザー2・ポケモン風の頭身の人（2026-09-05）</title>
+<style>
+  body{margin:0;background:#030207;color:#e8e2d6;font:13px ui-monospace,"Noto Sans Mono CJK JP",Menlo,monospace}
+  header{padding:12px 16px 4px}
+  h1{font-size:14px;font-weight:500;margin:0 0 4px;color:#ffc46b}
+  p{margin:0;color:#7d7566;font-size:12px;line-height:1.6}
+  .row{display:flex;flex-wrap:wrap;gap:14px;padding:8px 16px 4px}
+  .card{background:#07050c;border:1px solid #1c1826;border-radius:6px;padding:8px}
+  .card h2{font-size:13px;font-weight:500;margin:2px 4px 6px;color:#e8e2d6}
+  .card p{font-size:12px;color:#9a917f;margin:6px 4px 0;max-width:300px;line-height:1.5}
+  canvas{display:block;background:#030207;border-radius:4px;image-rendering:pixelated}
+  .scene{padding:8px 16px 20px}
+</style></head><body>
+<header>
+  <h1>女神 v3 — マザー2・ポケモンに出てくる人間と同じ頭身の、女神っぽい服の女性</h1>
+  <p>ドット絵（20×27 ドット、1ドット＝6px）。3つとも同じ体で、髪・服・飾りだけ違う。隣にベイビー（1階の卵）を本番の比率で置いた。吹き出しはマザー2式（黒い窓に明るい文字、しっぽは口へ）。下段は遊び画面の中に置いたときの大きさ。</p>
+</header>
+<div class="row">
+  <div class="card"><h2>A. 白衣の女神</h2><canvas id="a" width="300" height="400"></canvas><p>金の長い髪、白いローブに金の縁取り、頭の後ろに光輪。いちばん「女神」の記号が素直。</p></div>
+  <div class="card"><h2>B. 威厳ある母</h2><canvas id="b" width="300" height="400"></canvas><p>髪をまとめて金の冠。深い紫のローブ（地上の空の色）に金の帯。少し年上に見える。設計書の「威厳ある母」に一番近い。</p></div>
+  <div class="card"><h2>C. 光の衣</h2><canvas id="c" width="300" height="400"></canvas><p>白金の髪、淡い橙の衣に光の縁。体の周りにベイビーと同じ火の色の光。「送り出す火の母」。</p></div>
+</div>
+<div class="scene"><canvas id="s" width="880" height="330"></canvas>
+<p style="margin-top:6px">下段：遊び画面（洞窟の床）に女神が現れ、ベイビーに吹き出しで話す場面。マザー2のイベントと同じ置き方。</p></div>
+<script>
+// ---- パレット（ゲームの色＋ドット絵用の最小限）
+const PAL={
+  k:'#1a1210', s:'#f2dcc0', S:'#d9b896', e:'#3a2416', m:'#b0664e', p:'#e9a8a0',
+  h:'#f0c060', H:'#c08a2c', w:'#f4efe4', W:'#cfc6b5', a:'#ffc46b', A:'#c88a2a',
+  v:'#5a2d62', V:'#3d1c44', g:'#ffe6b0', G:'#f0c060', l:'#fff3c4'
+};
+// ---- 体（20×27）。h=髪 w=服 a=飾り。変種は色の差し替えと飾りの上描きで作る
+const BASE=[
+"......kkkkkkkk......",
+".....khhhhhhhhk.....",
+"....khhhhhhhhhhk....",
+"...khhhhhhhhhhhhk...",
+"...khhhsssssshhhk...",
+"...khhssssssssshk...",
+"...khhssesssesshk...",
+"...khhpsssssssphk...",
+"...khhssssmsssshk...",
+"....kksssssssskk....",
+"...khh.kssssssk.hhk.",
+"...khh.kksssskk.hhk.",
+"..khhkwwwwwwwwkhhk..",
+"..khhkwwwaaaawwkhhk.",
+"..khhkwwwwaawwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khkwwwwwwwwwwwwkhk.",
+".kkwwwwwwwwwwwwwwkk.",
+".kwwwwwwwwwwwwwwwwk.",
+".kwwwwwwwwwwwwwwwwk.",
+".kwwwwwwwwwwwwwwwwk.",
+"kwwwwwwwwwwwwwwwwwwk",
+"kwwaaaaaaaaaaaaaaawk",
+"kkkkkkkkkkkkkkkkkkkk"];
+const VARIANTS={
+  a:{name:'白衣の女神', map:{}, halo:true},
+  b:{name:'威厳ある母', map:{h:'H',w:'v',W:'V',a:'a'}, crown:true, hairUp:true},
+  c:{name:'光の衣', map:{h:'l',H:'g',w:'g',a:'w'}, aura:true, halo:true}
+};
+function drawSprite(ctx,ox,oy,px,v,t,blink){
+  const map=v.map||{};
+  BASE.forEach((row,y)=>{
+    if(v.hairUp && y>=10 && y<=19){ row=row.replace(/^(\.{1,3})khh/,'$1...').replace(/khh(k?)(\.\.?)$/,(m,k,d)=>'...'+k+d); row=row.replace(/(\.)hhk(\.)$/,'$1...$2'); }
+    [...row].forEach((ch,x)=>{
+      if(ch==='.') return;
+      let c=ch;
+      if(map[c]) c=map[c];
+      if(ch==='e' && blink) c='S';                // 瞬き
+      // 右側の影
+      if(ch==='w' && x>=14) c=(map.w?'V':'W'); if(ch==='s' && x>=13) c='S';
+      if(ch==='h' && (x>=13||y>=12)) c=(map.h==='l'?'g':map.h?'H':'H');
+      ctx.fillStyle=PAL[c]||PAL[ch]; ctx.fillRect(ox+x*px,oy+y*px,px,px);
+    });
+  });
+  if(v.hairUp){ // 結い上げた髪（後頭部の団子）と冠
+    ctx.fillStyle=PAL.H; ctx.fillRect(ox+7*px,oy-1*px,6*px,2*px); ctx.fillStyle=PAL.h; ctx.fillRect(ox+8*px,oy-1*px,4*px,1*px);
+  }
+  if(v.crown){ ctx.fillStyle=PAL.a; for(const x of [5,7,9,10,12,14]) ctx.fillRect(ox+x*px,oy-2*px,px,px); ctx.fillRect(ox+5*px,oy-1*px,10*px,px); ctx.fillStyle=PAL.l; ctx.fillRect(ox+9*px,oy-3*px,2*px,px); }
+}
+function halo(ctx,cx,cy,r,t,a){ ctx.save(); ctx.strokeStyle='rgba(255,243,196,'+(a*(0.6+0.25*Math.sin(t*2)))+')'; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(cx,cy,r,r*0.32,0,0,7); ctx.stroke();
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.6); g.addColorStop(0,'rgba(255,243,196,'+0.10*a+')'); g.addColorStop(1,'rgba(255,243,196,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r*1.6,0,7); ctx.fill(); ctx.restore(); }
+function aura(ctx,cx,cy,r,t){ const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r); g.addColorStop(0,'rgba(255,196,107,'+(0.16+0.05*Math.sin(t*1.5))+')'); g.addColorStop(1,'rgba(255,196,107,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r,0,7); ctx.fill(); }
+function egg(ctx,x,y,s,t){ // 1階のベイビー（本体と同じ描き方）
+  ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle='rgba(0,0,0,0.75)'; ctx.beginPath(); ctx.ellipse(0,s*0.95,s*0.85,s*0.3,0,0,7); ctx.fill();
+  ctx.rotate(Math.sin(t*2.2)*0.12);
+  const pts=[]; for(let i=0;i<8;i++){const a=i/8*Math.PI*2,rr=s*(0.60+0.13*Math.sin(i*2.3+1));pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}
+  ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  const g=ctx.createLinearGradient(-s*0.6,-s*0.7,s*0.6,s*0.7); g.addColorStop(0,'#1a151f'); g.addColorStop(0.52,'#292130'); g.addColorStop(1,'#3d3040'); ctx.fillStyle=g; ctx.fill();
+  ctx.lineWidth=Math.max(1,s*0.06); ctx.strokeStyle='#4b3d4d'; ctx.stroke();
+  ctx.lineCap='round'; ctx.strokeStyle='rgba(255,180,90,1)'; ctx.lineWidth=Math.max(1,s*0.2); ctx.beginPath(); ctx.moveTo(Math.cos(0.5)*s*0.12,Math.sin(0.5)*s*0.12); ctx.lineTo(Math.cos(0.5)*s*0.5,Math.sin(0.5)*s*0.5); ctx.stroke();
+  ctx.fillStyle='rgba(255,196,107,1)'; ctx.beginPath(); ctx.arc(0,0,s*0.16,0,7); ctx.fill();
+  ctx.fillStyle='rgba(255,248,224,1)'; ctx.beginPath(); ctx.arc(0,0,s*0.07,0,7); ctx.fill();
+  ctx.restore();
+}
+function bubble(ctx,x,y,w,lines,tail,size){ // マザー2式：黒い窓＋明るい文字、しっぽは口へ
+  size=size||14; const pad=12,lh=size*1.55,h=pad*2+lh*lines.length,r=6;
+  ctx.save(); ctx.fillStyle='rgba(3,2,7,.92)'; ctx.strokeStyle='rgba(232,226,214,.85)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); ctx.fill(); ctx.stroke();
+  const bx=Math.min(Math.max(tail[0],x+24),x+w-24);
+  ctx.fillStyle='rgba(3,2,7,.92)'; ctx.beginPath(); ctx.moveTo(bx-9,y+h-1); ctx.lineTo(tail[0],tail[1]); ctx.lineTo(bx+9,y+h-1); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(232,226,214,.85)'; ctx.beginPath(); ctx.moveTo(bx-9,y+h); ctx.lineTo(tail[0],tail[1]); ctx.lineTo(bx+9,y+h); ctx.stroke();
+  ctx.fillStyle='#e8e2d6'; ctx.font='500 '+size+'px ui-monospace,"Noto Sans Mono CJK JP",Menlo,monospace'; ctx.textBaseline='top'; ctx.textAlign='left';
+  lines.forEach((l,i)=>ctx.fillText(l,x+pad,y+pad+i*lh)); ctx.restore();
+}
+const LINES=['小さき火よ。','目を覚ますのです。'];
+const bl=(t,ph)=>{const c=Math.sin(t*2*Math.PI/3.4+ph);return c>0.985;};
+
+function drawCard(id,v,t){
+  const cv=document.getElementById(id), ctx=cv.getContext('2d'), W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  const px=6, sw=20*px, ox=W*0.36-sw/2, oy=140+Math.round(Math.sin(t*1.3)*2);
+  if(v.aura) aura(ctx,ox+sw/2,oy+14*px,150,t);
+  if(v.halo) halo(ctx,ox+sw/2,oy+1*px,44,t,1);
+  // 足元の影
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.ellipse(ox+sw/2,oy+27*px+3,50,8,0,0,7); ctx.fill();
+  drawSprite(ctx,ox,oy,px,v,t,bl(t,0));
+  egg(ctx,W*0.78,oy+27*px-22,22,t);
+  bubble(ctx,W*0.10,34,W*0.80,LINES,[ox+10*px,oy+8*px]);
+}
+function drawScene(t){
+  const cv=document.getElementById('s'), ctx=cv.getContext('2d'), W=cv.width,H=cv.height;
+  // 洞窟の床（暗い石畳）
+  ctx.fillStyle='#070510'; ctx.fillRect(0,0,W,H);
+  const TS=40; for(let y=0;y<H/TS;y++) for(let x=0;x<W/TS;x++){ const wall=(y<2||y>6||x<2||x>19); ctx.fillStyle=wall?'#0d0a16':((x+y)%2?'#151020':'#180f22'); ctx.fillRect(x*TS,y*TS,TS-1,TS-1); }
+  // マスターの光
+  const mx=9.5*TS, my=4.5*TS; const g=ctx.createRadialGradient(mx,my,0,mx,my,TS*3.2); g.addColorStop(0,'rgba(255,196,107,.22)'); g.addColorStop(1,'rgba(255,196,107,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  // 女神（遊び画面では 1ドット=3px：高さ約2マス）
+  const px=3, ox=13*TS, oy=my-27*px+16; const v=VARIANTS.a;
+  halo(ctx,ox+10*px,oy+1*px,22,t,.9);
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.ellipse(ox+10*px,oy+27*px+2,26,5,0,0,7); ctx.fill();
+  drawSprite(ctx,ox,oy+Math.round(Math.sin(t*1.3)*1.5),px,v,t,bl(t,0));
+  egg(ctx,mx,my,TS*.34,t);
+  bubble(ctx,ox-60,oy-78,300,LINES,[ox+10*px,oy+8*px],13);
+}
+function loop(){const t=performance.now()/1000;drawCard('a',VARIANTS.a,t);drawCard('b',VARIANTS.b,t);drawCard('c',VARIANTS.c,t);drawScene(t);requestAnimationFrame(loop);}
+loop();
+</script>
+</body></html>

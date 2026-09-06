@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>女神 v5 — センター分け＋後光（2026-09-05）</title>
+<style>
+  body{margin:0;background:#030207;color:#e8e2d6;font:13px ui-monospace,"Noto Sans Mono CJK JP",Menlo,monospace}
+  header{padding:12px 16px 4px}
+  h1{font-size:14px;font-weight:500;margin:0 0 4px;color:#ffc46b}
+  p{margin:0;color:#7d7566;font-size:12px;line-height:1.6}
+  .row{display:flex;flex-wrap:wrap;gap:12px;padding:8px 16px 4px}
+  .card{background:#07050c;border:1px solid #1c1826;border-radius:6px;padding:8px}
+  .card h2{font-size:13px;font-weight:500;margin:2px 4px 6px;color:#e8e2d6}
+  canvas{display:block;background:#030207;border-radius:4px}
+  .scene{padding:8px 16px 20px}
+</style></head><body>
+<header>
+  <h1>女神 v5 — 前髪はセンター分け。後ろから後光が差す</h1>
+  <p>後光のパターンを3つ。体・服・髪は v4 のまま。1ドット＝6px。下段は遊び画面での大きさ（後光1）。</p>
+</header>
+<div class="row" id="cards"></div>
+<div class="scene"><canvas id="s" width="880" height="330"></canvas></div>
+<script>
+const PAL={
+  k:'#1a1210', s:'#f2dcc0', S:'#d9b896', e:'#3a2416', m:'#b0664e', p:'#e9a8a0',
+  h:'#bfe0f7', H:'#84b6dc', w:'#f4efe4', W:'#cfc6b5', a:'#ffc46b', l:'#fff3c4'
+};
+// 頭の上〜額（前髪で差し替える y4〜y5）と、目の行 y6（閉じた目 e e）
+const TOP=[
+"......kkkkkkkk......",
+".....khhhhhhhhk.....",
+"....khhhhhhhhhhk....",
+"...khhhhhhhhhhhhk..."];
+const BANGS={
+  '前髪1 ぱっつん':      ["...khhhhhhhhhhhhk...","...khhssssssssshk..."],
+  '前髪2 センター分け':  ["...khhhhhsshhhhhk...","...khhhhssssshhhhk.."],
+  '前髪3 横に流す':      ["...khhhhhhhhhhsshk..","...khhhhhhhsssshhk.."],
+  '前髪4 ギザ':          ["...khhhhhhhhhhhhk...","...khhhshshshshhk..."]
+};
+const FACE=[
+"...khhseessseeshk...",   // 閉じた目
+"...khhpsssssssphk...",
+"...khhssssmsssshk...",
+"....kksssssssskk...."];
+const BODY=[
+"...khh.kssssssk.hhk.",
+"...khh.kksssskk.hhk.",
+"..khhkwwwwwwwwkhhk..",
+"..khhkwwwaaaawwkhhk.",
+"..khhkwwwwaawwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khhkwwwwwwwwwwkhhk.",
+".khkwwwwwwwwwwwwkhk.",
+".kkwwwwwwwwwwwwwwkk.",
+".kwwwwwwwwwwwwwwwwk.",
+".kwwwwwwwwwwwwwwwwk.",
+".kwwwwwwwwwwwwwwwwk.",
+"kwwwwwwwwwwwwwwwwwwk",
+"kwwaaaaaaaaaaaaaaawk",
+"kkkkkkkkkkkkkkkkkkkk"];
+function sprite(bangs){ return TOP.concat(BANGS[bangs],FACE,BODY); }
+function drawSprite(ctx,ox,oy,px,rows,t){
+  rows.forEach((row,y)=>{
+    [...row].forEach((ch,x)=>{
+      if(ch==='.') return;
+      let c=ch, dx=0;
+      // 横髪のウェーブ：2行ごとに外へ1ドット振る（時間でゆっくり揺れる）
+      const side=(y>=10 && (x<=5 || x>=15) && (ch==='h'||ch==='k'));
+      if(side){ const ph=Math.floor((y+Math.floor(t*1.2))/2)%2; dx=(ph?1:0)*(x<10?-1:1); }
+      if(ch==='w' && x>=14) c='W'; if(ch==='s' && x>=13) c='S';
+      if(ch==='h' && (x>=13||y>=12)) c='H';
+      ctx.fillStyle=PAL[c]; ctx.fillRect(ox+(x+dx)*px,oy+y*px,px,px);
+    });
+  });
+}
+// 後光：体の後ろから放射する光。kind 1=細い光線が回る 2=光の円盤＋光線 3=柔らかい光の広がりだけ
+function gokou(ctx,cx,cy,R,t,kind,a){
+  ctx.save(); ctx.globalCompositeOperation='lighter';
+  if(kind!==3){
+    const n=kind===1?24:16, rot=t*0.12;
+    for(let i=0;i<n;i++){
+      const ang=rot+i/n*Math.PI*2, w=(kind===1?0.05:0.09)*(1+0.3*Math.sin(t*2+i));
+      const len=R*(0.75+0.25*Math.sin(t*1.3+i*1.7));
+      const g=ctx.createLinearGradient(cx,cy,cx+Math.cos(ang)*len,cy+Math.sin(ang)*len);
+      g.addColorStop(0,'rgba(255,228,150,'+(0.28*a)+')'); g.addColorStop(1,'rgba(255,228,150,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.lineTo(cx+Math.cos(ang-w)*len,cy+Math.sin(ang-w)*len); ctx.lineTo(cx+Math.cos(ang+w)*len,cy+Math.sin(ang+w)*len); ctx.closePath(); ctx.fill();
+    }
+  }
+  if(kind===2){ const d=ctx.createRadialGradient(cx,cy,R*0.18,cx,cy,R*0.42); d.addColorStop(0,'rgba(255,236,180,'+(0.30*a)+')'); d.addColorStop(1,'rgba(255,236,180,0)'); ctx.fillStyle=d; ctx.beginPath(); ctx.arc(cx,cy,R*0.42,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(255,243,196,'+(0.5*a)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,cy,R*0.40,0,7); ctx.stroke(); }
+  const s=ctx.createRadialGradient(cx,cy,0,cx,cy,R*(kind===3?1.0:0.7)); s.addColorStop(0,'rgba(255,236,180,'+((kind===3?0.34:0.16)*a)+')'); s.addColorStop(1,'rgba(255,236,180,0)'); ctx.fillStyle=s; ctx.beginPath(); ctx.arc(cx,cy,R,0,7); ctx.fill();
+  ctx.restore();
+}
+function halo(ctx,cx,cy,r,t,a){ ctx.save(); ctx.strokeStyle='rgba(255,243,196,'+(a*(0.6+0.25*Math.sin(t*2)))+')'; ctx.lineWidth=3; ctx.beginPath(); ctx.ellipse(cx,cy,r,r*0.32,0,0,7); ctx.stroke();
+  const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.6); g.addColorStop(0,'rgba(255,243,196,'+0.10*a+')'); g.addColorStop(1,'rgba(255,243,196,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r*1.6,0,7); ctx.fill(); ctx.restore(); }
+function egg(ctx,x,y,s,t){
+  ctx.save(); ctx.translate(x,y);
+  ctx.fillStyle='rgba(0,0,0,0.75)'; ctx.beginPath(); ctx.ellipse(0,s*0.95,s*0.85,s*0.3,0,0,7); ctx.fill();
+  ctx.rotate(Math.sin(t*2.2)*0.12);
+  const pts=[]; for(let i=0;i<8;i++){const a=i/8*Math.PI*2,rr=s*(0.60+0.13*Math.sin(i*2.3+1));pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}
+  ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  const g=ctx.createLinearGradient(-s*0.6,-s*0.7,s*0.6,s*0.7); g.addColorStop(0,'#1a151f'); g.addColorStop(0.52,'#292130'); g.addColorStop(1,'#3d3040'); ctx.fillStyle=g; ctx.fill();
+  ctx.lineWidth=Math.max(1,s*0.06); ctx.strokeStyle='#4b3d4d'; ctx.stroke();
+  ctx.lineCap='round'; ctx.strokeStyle='rgba(255,180,90,1)'; ctx.lineWidth=Math.max(1,s*0.2); ctx.beginPath(); ctx.moveTo(Math.cos(0.5)*s*0.12,Math.sin(0.5)*s*0.12); ctx.lineTo(Math.cos(0.5)*s*0.5,Math.sin(0.5)*s*0.5); ctx.stroke();
+  ctx.fillStyle='rgba(255,196,107,1)'; ctx.beginPath(); ctx.arc(0,0,s*0.16,0,7); ctx.fill();
+  ctx.fillStyle='rgba(255,248,224,1)'; ctx.beginPath(); ctx.arc(0,0,s*0.07,0,7); ctx.fill();
+  ctx.restore();
+}
+function bubble(ctx,x,y,w,lines,tail,size){
+  size=size||14; const pad=12,lh=size*1.55,h=pad*2+lh*lines.length,r=6;
+  ctx.save(); ctx.fillStyle='rgba(3,2,7,.92)'; ctx.strokeStyle='rgba(232,226,214,.85)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); ctx.fill(); ctx.stroke();
+  const bx=Math.min(Math.max(tail[0],x+24),x+w-24);
+  ctx.fillStyle='rgba(3,2,7,.92)'; ctx.beginPath(); ctx.moveTo(bx-9,y+h-1); ctx.lineTo(tail[0],tail[1]); ctx.lineTo(bx+9,y+h-1); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(232,226,214,.85)'; ctx.beginPath(); ctx.moveTo(bx-9,y+h); ctx.lineTo(tail[0],tail[1]); ctx.lineTo(bx+9,y+h); ctx.stroke();
+  ctx.fillStyle='#e8e2d6'; ctx.font='500 '+size+'px ui-monospace,"Noto Sans Mono CJK JP",Menlo,monospace'; ctx.textBaseline='top'; ctx.textAlign='left';
+  lines.forEach((l,i)=>ctx.fillText(l,x+pad,y+pad+i*lh)); ctx.restore();
+}
+const LINES=['小さき火よ。','目を覚ますのです。'];
+const names=['後光1 細い光線','後光2 光の円盤＋光線','後光3 柔らかい光'], cards={}; const BANG='前髪2 センター分け';
+const wrap=document.getElementById('cards');
+names.forEach(n=>{const d=document.createElement('div');d.className='card';d.innerHTML='<h2>'+n+'</h2>';const c=document.createElement('canvas');c.width=300;c.height=360;d.appendChild(c);wrap.appendChild(d);cards[n]=c;});
+function drawCard(n,t){
+  const cv=cards[n], ctx=cv.getContext('2d'), W=cv.width,H=cv.height; ctx.clearRect(0,0,W,H);
+  const px=6, sw=20*px, ox=W*0.42-sw/2, oy=130+Math.round(Math.sin(t*1.3)*2);
+  gokou(ctx,ox+sw/2,oy+9*px,140,t,names.indexOf(n)+1,1);
+  halo(ctx,ox+sw/2,oy+1*px,44,t,1);
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.ellipse(ox+sw/2,oy+27*px+3,50,8,0,0,7); ctx.fill();
+  drawSprite(ctx,ox,oy,px,sprite(BANG),t);
+  egg(ctx,W*0.84,oy+27*px-22,20,t);
+  bubble(ctx,W*0.06,14,W*0.88,LINES,[ox+10*px,oy+8*px],13);
+}
+function drawScene(t){
+  const cv=document.getElementById('s'), ctx=cv.getContext('2d'), W=cv.width,H=cv.height;
+  ctx.fillStyle='#070510'; ctx.fillRect(0,0,W,H);
+  const TS=40; for(let y=0;y<H/TS;y++) for(let x=0;x<W/TS;x++){ const wall=(y<2||y>6||x<2||x>19); ctx.fillStyle=wall?'#0d0a16':((x+y)%2?'#151020':'#180f22'); ctx.fillRect(x*TS,y*TS,TS-1,TS-1); }
+  const mx=9.5*TS, my=4.5*TS; const g=ctx.createRadialGradient(mx,my,0,mx,my,TS*3.2); g.addColorStop(0,'rgba(255,196,107,.22)'); g.addColorStop(1,'rgba(255,196,107,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  const px=3, ox=13*TS, oy=my-27*px+16;
+  gokou(ctx,ox+10*px,oy+9*px,70,t,1,.9);
+  halo(ctx,ox+10*px,oy+1*px,22,t,.9);
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.ellipse(ox+10*px,oy+27*px+2,26,5,0,0,7); ctx.fill();
+  drawSprite(ctx,ox,oy+Math.round(Math.sin(t*1.3)*1.5),px,sprite(BANG),t);
+  egg(ctx,mx,my,TS*.34,t);
+  bubble(ctx,ox-60,oy-78,300,LINES,[ox+10*px,oy+8*px],13);
+}
+function loop(){const t=performance.now()/1000;names.forEach(n=>drawCard(n,t));drawScene(t);requestAnimationFrame(loop);}
+loop();
+</script>
+</body></html>

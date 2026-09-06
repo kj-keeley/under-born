@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<title>女神 v2 — 大地そのものの石の顔（INFJ 監督の決定、2026-09-04）</title>
+<style>
+  body{margin:0;background:#030207;color:#e8e2d6;font:13px ui-monospace,"Noto Sans Mono CJK JP",Menlo,monospace}
+  header{padding:12px 16px 6px}
+  h1{font-size:14px;font-weight:500;margin:0 0 4px;color:#ffc46b}
+  p{margin:0;color:#7d7566;font-size:12px;line-height:1.6}
+  .wrap{display:flex;flex-wrap:wrap;gap:16px;padding:8px 16px 20px;align-items:flex-start}
+  .panel{display:flex;flex-direction:column;gap:8px}
+  canvas{display:block;background:#030207;border:1px solid #1c1826}
+  .btns{display:flex;gap:6px;flex-wrap:wrap}
+  button{background:#0d0a14;color:#e8e2d6;border:1px solid #2a2333;border-radius:4px;padding:5px 9px;font:12px ui-monospace,monospace;cursor:pointer}
+  button.on{border-color:#ffc46b;color:#ffc46b}
+  .cap{color:#9a917f;font-size:12px;max-width:560px;line-height:1.55}
+</style></head><body>
+<header>
+  <h1>女神 v2 — ベイビーと同じ部品（石の殻・亀裂の火・火の瞳）で組んだ、大地そのものの石の顔</h1>
+  <p>本体の `mShell` / `mCracks` / `mEye` / `mBlink` / `drawPoemLines` をそのまま写し、CS=560 の実寸。人型ではない。手も殻片も無い。新しい色は無い。殻は動かず、動くのは瞬き・口の灯り・亀裂の脈動だけ。<br>
+  進行の軸は「大きさ」ひとつ：開始（目の前）→ 初進化 → 2回目（遠い）→ 地上（地面そのもの。目が地面に開き、穴が口）。ボタンで切り替え。</p>
+</header>
+<div class="wrap">
+  <div class="panel">
+    <canvas id="c1" width="560" height="560"></canvas>
+    <div class="btns" id="b1"></div>
+    <div class="cap">黒画面の詩（開始／初進化／2回目）。本体の `drawOpeningPoem` と同じ黒と放射光。吹き出しは息止めの教えと同じ黒帯、文字は .028（改行は正典のまま）。しっぽの先は口の亀裂。</div>
+  </div>
+  <div class="panel">
+    <canvas id="c2" width="560" height="560"></canvas>
+    <div class="btns" id="b2"></div>
+    <div class="cap">地上（森）。本体の `drawSurfaceWorld` の地面の上に、女神を地面そのものとして重ねる（地面より上は出ない）。穴が口。しっぽは穴へ。ベイビーは本体と同じ位置（H*.68）。</div>
+  </div>
+</div>
+<script>
+/* ===== 本体から写したもの（game/underborn_scout7bd.html） ===== */
+let ctx;
+const CS=560;
+function glow(cx,cy,rad,col,a){const g=ctx.createRadialGradient(cx,cy,0,cx,cy,rad);g.addColorStop(0,col.replace('%A%',a));g.addColorStop(1,col.replace('%A%',0));ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,rad,0,7);ctx.fill();}
+function mShell(s,o){
+  o=o||{};
+  const verts=o.verts||7, squish=o.squish||1, seed=o.seed||0;
+  const pts=[];
+  for(let i=0;i<verts;i++){const a=i/verts*Math.PI*2;const rr=s*(0.60+0.13*Math.sin(i*2.3+seed))*squish;pts.push([Math.cos(a)*rr,Math.sin(a)*rr]);}
+  ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.closePath();
+  const g=ctx.createLinearGradient(-s*0.6,-s*0.7,s*0.6,s*0.7);
+  if(o.cold){ g.addColorStop(0,'#121017'); g.addColorStop(0.52,'#191621'); g.addColorStop(1,'#231e2a'); }
+  else{       g.addColorStop(0,'#1a151f'); g.addColorStop(0.52,'#292130'); g.addColorStop(1,'#3d3040'); }
+  ctx.fillStyle=g; ctx.fill();
+  ctx.lineWidth=o.lw||Math.max(1,s*0.06);           // ※巨大化時は o.lw で太さを抑える（本体式だと画面幅になる）
+  ctx.strokeStyle=o.cold?'#2b2433':'#4b3d4d'; ctx.stroke();
+  const a1=pts[1], a2=pts[4%verts];
+  ctx.beginPath(); ctx.moveTo(a1[0]*0.82,a1[1]*0.82); ctx.lineTo(a2[0]*0.76,a2[1]*0.76);
+  ctx.strokeStyle=o.cold?'rgba(255,255,255,0.03)':'rgba(255,224,170,0.10)';
+  ctx.lineWidth=Math.max(0.8,s*0.02); ctx.stroke();
+}
+function mCracks(s,o){
+  o=o||{};
+  const n=o.count||4, open=o.open==null?1:o.open, alpha=o.alpha==null?1:o.alpha;
+  ctx.lineCap='round';
+  ctx.strokeStyle='rgba(255,180,90,'+(0.25+0.75*alpha)+')';
+  for(let i=0;i<n;i++){
+    const a=i/n*Math.PI*2+0.5;
+    ctx.lineWidth=o.lw||Math.max(1,s*(0.07+0.16*open));  // ※同上
+    ctx.beginPath();
+    ctx.moveTo(Math.cos(a)*s*0.12,Math.sin(a)*s*0.12);
+    ctx.lineTo(Math.cos(a)*s*(o.len||0.62),Math.sin(a)*s*(o.len||0.62));
+    ctx.stroke();
+    if(o.branch){const a2=(i+1)/n*Math.PI*2+0.5;ctx.lineWidth=o.lw?o.lw*0.7:Math.max(1,s*0.06);ctx.beginPath();ctx.arc(0,0,s*0.42,a,a2);ctx.stroke();}
+  }
+}
+function mChip(s,tm,tuck,orbOfs){
+  const orbA=(orbOfs||-0.95)+Math.sin(tm*0.5)*0.1;
+  const r=s*(tuck?0.72:1.08);
+  ctx.save(); ctx.translate(Math.cos(orbA)*r,Math.sin(orbA)*r);
+  ctx.rotate(-0.28+Math.sin(tm*0.7)*0.05);
+  ctx.beginPath();
+  ctx.moveTo(-s*0.09,s*0.045); ctx.lineTo(0,-s*0.15); ctx.lineTo(s*0.12,-s*0.02); ctx.lineTo(s*0.03,s*0.13);
+  ctx.closePath();
+  ctx.fillStyle=tuck?'#221c28':'#2e2531'; ctx.fill();
+  ctx.lineWidth=Math.max(1,s*0.02); ctx.strokeStyle=tuck?'#3a3040':'#59434e'; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-s*0.04,s*0.02); ctx.lineTo(s*0.02,-s*0.09);
+  ctx.strokeStyle='rgba(255,180,90,'+(tuck?0.12:0.45)+')';
+  ctx.lineWidth=Math.max(0.8,s*0.015); ctx.stroke();
+  ctx.restore();
+}
+function mEye(s,o){
+  o=o||{};
+  const blink=o.blink==null?1:o.blink, color=o.color||'255,196,107', lit=o.lit==null?1:o.lit;
+  const lx=(o.lookX||0)*s*0.07, ly=(o.lookY||0)*s*0.05;
+  const h=Math.max(s*0.035, s*0.34*blink);
+  ctx.fillStyle='rgba('+color+','+0.25*(0.4+0.6*lit)+')';
+  ctx.beginPath(); ctx.ellipse(0,0,s*0.30,h*1.25,0,0,7); ctx.fill();
+  ctx.fillStyle='rgba('+color+','+(0.35+0.60*lit)+')';
+  ctx.beginPath(); ctx.ellipse(0,0,s*0.21,h,0,0,7); ctx.fill();
+  if(blink>0.25){ctx.fillStyle='rgba(255,248,224,'+(0.45+0.50*lit)+')';ctx.beginPath();ctx.arc(lx,ly,s*0.085*Math.min(1,blink+0.2),0,7);ctx.fill();}
+}
+function mBlink(period,ofs){const p=((performance.now()/1000+ofs)%period)/period;if(p>0.94){const q=(p-0.94)/0.06;return q<0.5?1-q*2:(q-0.5)*2;}return 1;}
+function drawPoemLines(lines,y,alpha,size){
+  ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='500 '+Math.round(CS*(size||.029))+'px ui-monospace,"Noto Sans Mono CJK JP",monospace';
+  ctx.fillStyle='rgba(232,226,214,'+alpha+')';
+  const gap=CS*.065; lines.forEach((line,i)=>ctx.fillText(line,CS/2,y+(i-(lines.length-1)/2)*gap,CS*.90));
+}
+const CANON_POEMS={
+  opening:['小さき火よ。目を覚ますのです。','さぁ、起き上がって。上へ上へいってらっしゃい。'],
+  child:['大きくなりましたね、小さな火。','活き活きと、その火で照らすのです。'],
+  lord:['あとちょっとですよ。小さな火。'],
+  release:['よく頑張りましたね、小さな火。','もう赤ちゃんとは呼べなくとも、あなたはずっと、わたしのじまんのこ。'],
+  trueForm:['もう、かくれなくていいのですよ。それが、ほんとうの あなた']
+};
+// ロード段階のベイビー（本体 renderMasterBody の stage 3 の枝を写した）
+function renderMasterLord(px,py,base,tm){
+  const s=base*1.12, col='255,196,107';
+  ctx.fillStyle='rgba(0,0,0,0.75)'; ctx.beginPath(); ctx.ellipse(px,py+base*0.95,s*0.85,s*0.3,0,0,7); ctx.fill();
+  ctx.save(); ctx.translate(px,py); const pulse=1+Math.sin(tm*2.5)*0.05; ctx.scale(pulse,pulse);
+  ctx.save(); ctx.rotate(tm*0.19); mShell(s,{}); mCracks(s,{count:5,open:1.2,alpha:1,len:0.66,branch:true}); ctx.restore();
+  mEye(s*1.1,{blink:mBlink(3.4,0),lookY:0.05,color:col,lit:1});
+  for(let i=0;i<3;i++){const a=tm*0.7+i*Math.PI*2/3;ctx.save();ctx.translate(Math.cos(a)*s*1.35,Math.sin(a)*s*1.05);ctx.rotate(a+tm*0.5);mChip(s*0.9,tm+i,false);ctx.restore();}
+  ctx.restore();
+}
+
+/* ===== 新規：女神（INFJ 監督の決定どおり） ===== */
+// 返り値＝口の座標（吹き出しのしっぽの付け先）
+function renderGoddess(s,tm,o){
+  o=o||{};
+  const cx=CS/2, cy=CS*.55+0.6*s, speaking=!!o.speaking, fade=o.fade==null?1:o.fade;
+  ctx.save(); ctx.globalAlpha=fade*(o.alpha==null?1:o.alpha);
+  if(o.clipBelow!=null){ ctx.beginPath(); ctx.rect(0,o.clipBelow,CS,CS-o.clipBelow); ctx.clip(); }
+  ctx.save(); ctx.translate(cx,cy);
+  mShell(s,{verts:9,seed:3,squish:0.85,lw:Math.max(2,s*0.015)});
+  // 亀裂：ロードと同じ枝付き6本。0.6Hz でゆっくり脈打つ（大きいものの息）
+  const breath=0.55+0.45*(0.5+0.5*Math.sin(tm*2*Math.PI*0.6));
+  mCracks(s,{count:6,open:1,len:.62,branch:true,alpha:breath,lw:Math.max(2,s*0.012)});
+  ctx.restore();
+  // 目：見上げる（上へ行く子を見送る）。ベイビーと同じ周期、位相だけ違う
+  const blink=mBlink(3.4,1.7);
+  for(const side of [-1,1]){ ctx.save(); ctx.translate(cx+side*0.22*s, cy-0.48*s); mEye(s*0.30,{blink,lookY:-0.4,lit:1}); ctx.restore(); }
+  // 口：横一文字の亀裂1本。喋る間だけ灯る
+  const mx=cx, my=cy-0.36*s;
+  if(!o.noMouth){
+    ctx.lineCap='round'; ctx.strokeStyle='rgba(255,180,90,'+(speaking?1.0:0.3)+')'; ctx.lineWidth=Math.max(2,0.05*s*0.35);
+    ctx.beginPath(); ctx.moveTo(mx-0.11*s,my); ctx.lineTo(mx+0.11*s,my); ctx.stroke();
+    if(speaking) glow(mx,my,0.14*s,'rgba(255,180,90,%A%)',0.35);
+  }
+  ctx.restore();
+  return [mx,my];
+}
+// 吹き出し：黒帯（息止めの教えと同じ）＋ink 文字 .028、名札なし、しっぽは口へ
+function drawBubble(lines,cy,alpha,tail){
+  const w=CS*.96, x=(CS-w)/2, gap=CS*.065, pad=CS*.03, h=pad*2+gap*lines.length, y=cy-h/2, r=CS*.02;
+  ctx.save(); ctx.globalAlpha=alpha;
+  ctx.fillStyle='rgba(3,2,7,.70)'; ctx.strokeStyle='rgba(255,196,107,.22)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r); ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r); ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath(); ctx.fill(); ctx.stroke();
+  if(tail){ const tx=tail[0], ty=tail[1]-2, b=CS*.025; ctx.fillStyle='rgba(3,2,7,.70)'; ctx.beginPath(); ctx.moveTo(CS/2-b,y+h-1); ctx.lineTo(tx,ty); ctx.lineTo(CS/2+b,y+h-1); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='rgba(255,196,107,.22)'; ctx.beginPath(); ctx.moveTo(CS/2-b,y+h); ctx.lineTo(tx,ty); ctx.lineTo(CS/2+b,y+h); ctx.stroke(); }
+  drawPoemLines(lines,cy,1,.028);
+  ctx.restore();
+}
+
+/* ===== 画面1：黒画面の詩 ===== */
+const STAGES1=[
+  {label:'開始（1F）', s:CS*1.4, lines:CANON_POEMS.opening},
+  {label:'初進化', s:CS*0.9, lines:CANON_POEMS.child},
+  {label:'2回目の進化', s:CS*0.5, lines:CANON_POEMS.lord},
+];
+let st1=0;
+function drawScreen1(t){
+  const fade=Math.min(1,t/.8);
+  ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1; ctx.fillStyle='#030207'; ctx.fillRect(0,0,CS,CS);
+  const g=ctx.createRadialGradient(CS/2,CS*.53,0,CS/2,CS*.53,CS*.34); g.addColorStop(0,'rgba(255,170,80,'+.08*fade+')'); g.addColorStop(1,'rgba(255,170,80,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,CS,CS);
+  const S=STAGES1[st1];
+  const mouth=renderGoddess(S.s,t,{speaking:true,fade});
+  drawBubble(S.lines,CS*.42,fade,mouth);
+  ctx.font='400 '+Math.round(CS*.018)+'px ui-monospace,monospace'; ctx.fillStyle='rgba(125,117,102,'+.65*fade+')'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('タップ／クリックでスキップ',CS/2,CS*.96);
+}
+
+/* ===== 画面2：地上（森） ===== */
+const STAGES2=[
+  {label:'解放の詩', lines:CANON_POEMS.release, y:CS*.29},
+  {label:'変身前', lines:CANON_POEMS.trueForm, y:CS*.34},
+];
+let st2=0;
+function drawScreen2(t){
+  const W=CS,H=CS,ground=H*.56, grow=1;
+  ctx.setTransform(1,0,0,1,0,0); ctx.globalAlpha=1;
+  const sky=ctx.createLinearGradient(0,0,0,ground); sky.addColorStop(0,'#241238'); sky.addColorStop(.58,'#5a2d62'); sky.addColorStop(1,'#8b5268'); ctx.fillStyle=sky; ctx.fillRect(0,0,W,ground);
+  ctx.fillStyle='#241b22'; ctx.fillRect(0,ground,W,H-ground);
+  for(let i=0;i<13;i++){ const x=(i*83+31)%W,y=ground+((i*47)%Math.round(H-ground)); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+18+(i%3)*9,y-8); ctx.lineTo(x+31,y+3); ctx.strokeStyle='rgba(105,74,76,.34)'; ctx.lineWidth=1.2; ctx.stroke(); }
+  // 女神＝地面そのもの（地面より上は出ない。alpha .8 で地面に重ねる）
+  const speaking=true;
+  renderGoddess(CS*1.6,t,{speaking,alpha:.8,clipBelow:ground,noMouth:true});
+  const greenR=W*(.13+.15*grow),green=ctx.createRadialGradient(W/2,ground+H*.12,0,W/2,ground+H*.12,greenR); green.addColorStop(0,'rgba(80,142,73,.66)'); green.addColorStop(.65,'rgba(54,105,55,.42)'); green.addColorStop(1,'rgba(50,92,48,0)'); ctx.fillStyle=green; ctx.beginPath(); ctx.ellipse(W/2,ground+H*.12,greenR,greenR*.48,0,0,7); ctx.fill();
+  // 穴＝口。喋る間は縁の橙線を .16→.6 に
+  ctx.fillStyle='#171119'; ctx.beginPath(); ctx.moveTo(W*.32,ground+H*.12); ctx.lineTo(W*.39,ground-H*.08); ctx.lineTo(W*.61,ground-H*.08); ctx.lineTo(W*.68,ground+H*.12); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle='rgba(255,165,82,'+(speaking?.6:.16)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(W*.39,ground-H*.08); ctx.lineTo(W*.61,ground-H*.08); ctx.stroke();
+  if(speaking) glow(W*.5,ground-H*.08,W*.12,'rgba(255,165,82,%A%)',.25);
+  glow(W/2,H*.68,W*.30,'rgba(255,205,110,%A%)',.18);
+  renderMasterLord(W/2,H*.68,W*.09,t);
+  const S=STAGES2[st2];
+  drawBubble(S.lines,S.y,1,[W*.5,ground-H*.08]);
+}
+
+/* ===== 起動 ===== */
+const c1=document.getElementById('c1'), c2=document.getElementById('c2');
+function mkBtns(id,stages,get,set){const el=document.getElementById(id);stages.forEach((s,i)=>{const b=document.createElement('button');b.textContent=s.label;b.onclick=()=>{set(i);[...el.children].forEach((x,j)=>x.classList.toggle('on',j===i));t0=performance.now()/1000;};if(i===get())b.classList.add('on');el.appendChild(b);});}
+mkBtns('b1',STAGES1,()=>st1,i=>st1=i); mkBtns('b2',STAGES2,()=>st2,i=>st2=i);
+let t0=performance.now()/1000;
+function loop(){const t=performance.now()/1000-t0;ctx=c1.getContext('2d');drawScreen1(t);ctx=c2.getContext('2d');drawScreen2(t+3);requestAnimationFrame(loop);}
+loop();
+</script>
+</body></html>
