@@ -22,6 +22,7 @@ Codexへ渡した／渡す実装指示書の保管場所です。
 | `2026-08-11_7B-b2_v3.md` | 第7B-b2便 | v3 | **実装済み・数値確定待ち** | `game/underborn_scout7bc.html`へ反映。息止め中の通常移動比率を0〜1で調整可能にした |
 | `2026-08-11_7B-b3_v4.md` | 第7B-b3便 | v4 | **実装済み・数値確定待ち** | `game/underborn_scout7bd.html`へ反映。見失い探索・座標回避・炎上停止を修正 |
 | `2026-09-05_goddess_v1.md` | 女神便 | v1 | **実装済み・手触り確認待ち** | `game/underborn_scout7be.html`へ反映。女神を遊び画面に出し、吹き出しで正典の詩5本を喋らせる |
+| `2026-09-06_goddess-hotfix_v1.md` | 女神便 hotfix | v1 | **実装済み** | `game/underborn_scout7bf.html`へ反映。吹き出しの身体回避、段階的な登退場、一行送りと「▼」を追加 |
 
 ## 便の分割について
 
