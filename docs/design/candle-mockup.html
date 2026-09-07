@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>火が絶えた — キャンドル（試作 2026-09-07）</title>
+<style>body{margin:0;background:#030207;color:#e8e2d6;font:13px ui-monospace,"Noto Sans Mono CJK JP",monospace}header{padding:12px 16px 4px}h1{font-size:14px;font-weight:500;margin:0 0 4px;color:#ffc46b}p{margin:0;color:#7d7566;font-size:12px}.row{display:flex;gap:12px;padding:8px 16px 16px}.card{background:#07050c;border:1px solid #1c1826;border-radius:6px;padding:8px}.card h2{font-size:12px;font-weight:500;margin:2px 4px 6px;color:#9a917f}canvas{display:block;background:#030207;border-radius:4px}</style></head><body>
+<header><h1>火が絶えた — 画面に小さなキャンドルが出て、炎がシュッと消え、煙が一筋のぼる</h1><p>本体と同じ描き方（Canvas の図形とグラデーション）。左から 0.0秒／0.5秒（消える瞬間）／1.2秒（煙）。実物は動く。</p></header>
+<div class="row" id="row"></div>
+<script>
+function candle(ctx,W,H,t){
+  ctx.fillStyle='#030207'; ctx.fillRect(0,0,W,H);
+  const cx=W/2, base=H*.72, ch=H*.22, cw=W*.09;
+  const lit=Math.max(0,1-Math.max(0,(t-.35)/.15));           // 0.35〜0.5秒で消える
+  const flick=1+Math.sin(t*23)*.06+Math.sin(t*41)*.04;
+  // 炎の光（部屋にこぼれる光）
+  if(lit>0){ const g=ctx.createRadialGradient(cx,base-ch-H*.05,0,cx,base-ch-H*.05,W*.42*lit); g.addColorStop(0,'rgba(255,190,110,'+(.28*lit)+')'); g.addColorStop(1,'rgba(255,190,110,0)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
+  // 蝋燭の体
+  const body=ctx.createLinearGradient(cx-cw/2,0,cx+cw/2,0); body.addColorStop(0,'#cfc6b5'); body.addColorStop(.5,'#f4efe4'); body.addColorStop(1,'#a89f8e');
+  ctx.fillStyle=body; ctx.fillRect(cx-cw/2,base-ch,cw,ch);
+  ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(cx+cw*.25,base-ch,cw*.25,ch);
+  // 皿と影
+  ctx.fillStyle='rgba(0,0,0,.6)'; ctx.beginPath(); ctx.ellipse(cx,base+3,cw*1.4,cw*.35,0,0,7); ctx.fill();
+  ctx.fillStyle='#3d3040'; ctx.beginPath(); ctx.ellipse(cx,base,cw*1.2,cw*.28,0,0,7); ctx.fill();
+  // 芯
+  ctx.strokeStyle='#1a1210'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(cx,base-ch); ctx.lineTo(cx,base-ch-H*.03); ctx.stroke();
+  // 炎（消える瞬間は細く伸びて、シュッと縮む）
+  if(lit>0){
+    const fh=H*.09*flick*(.4+.6*lit), fw=W*.028*(.5+.5*lit)*(lit<.6?.6:1);
+    const fy=base-ch-H*.03;
+    ctx.fillStyle='rgba(255,196,107,'+(.85*lit)+')'; ctx.beginPath(); ctx.moveTo(cx-fw,fy); ctx.quadraticCurveTo(cx-fw*.9,fy-fh*.55,cx,fy-fh); ctx.quadraticCurveTo(cx+fw*.9,fy-fh*.55,cx+fw,fy); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgba(255,248,224,'+(.9*lit)+')'; ctx.beginPath(); ctx.ellipse(cx,fy-fh*.28,fw*.45,fh*.28,0,0,7); ctx.fill();
+    ctx.fillStyle='rgba(120,160,255,'+(.5*lit)+')'; ctx.beginPath(); ctx.ellipse(cx,fy-fh*.06,fw*.5,fh*.1,0,0,7); ctx.fill();
+  }
+  // 煙（消えた後、一筋のぼって薄れる）
+  if(t>.45){ const st=t-.45; for(let i=0;i<7;i++){ const k=st-i*.09; if(k<0) continue; const y=base-ch-H*.05-k*H*.28, x=cx+Math.sin(k*6+i)*W*.012*(1+k), a=Math.max(0,.35-k*.3), r=2+k*7; ctx.fillStyle='rgba(180,170,160,'+a+')'; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); } }
+  // 文字（暗くなってから）
+  if(t>.9){ const a=Math.min(1,(t-.9)/.5); ctx.fillStyle='rgba(232,226,214,'+(.92*a)+')'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.font='600 '+Math.round(W*.06)+'px ui-monospace,monospace'; ctx.fillText('火が絶えた',cx,H*.32); }
+}
+const times=[['0.0秒 灯っている',0.0],['0.5秒 シュッと消える',0.5],['1.2秒 煙と「火が絶えた」',1.25]];
+const row=document.getElementById('row');
+times.forEach(([n,t])=>{ const d=document.createElement('div'); d.className='card'; d.innerHTML='<h2>'+n+'</h2>'; const c=document.createElement('canvas'); c.width=280; c.height=280; d.appendChild(c); row.appendChild(d); candle(c.getContext('2d'),280,280,t); });
+</script></body></html>

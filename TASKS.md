@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout7c.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。第7C便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout7d.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。ハーケン便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -23,6 +23,7 @@
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
 - [x] **Codex（Sol）**：第7C便を `game/underborn_scout7c.html` として実装。支点設置・保存・ハート0復帰・「つづきから」をブラウザ確認（9-06）
+- [x] **Codex（Sol）**：ハーケン便を `game/underborn_scout7d.html` として実装。名称・打つ演出・火が絶える演出・初回授与をブラウザ確認（9-07）
 - [ ] **Codex**：一般配布用に `DEV_DEFAULT=false` へ戻し、DEV UI が出ないことを確認
 
 ## 次に行うこと（暫定行で進める。Kevin は却下だけ）
