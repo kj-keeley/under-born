@@ -1,0 +1,89 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>ハーケン 案3つ（2026-09-08）</title>
+<style>body{margin:0;background:#030207;color:#e8e2d6;font:13px ui-monospace,"Noto Sans Mono CJK JP",monospace;width:900px}header{padding:12px 16px 4px}h1{font-size:14px;font-weight:500;margin:0 0 4px;color:#ffc46b}p{margin:0;color:#7d7566;font-size:12px}.row{display:flex;gap:12px;padding:8px 16px 16px}.card{background:#07050c;border:1px solid #1c1826;border-radius:6px;padding:8px;flex:1}.card h2{font-size:13px;font-weight:500;margin:2px 4px 6px;color:#e8e2d6}.card p{margin:4px 4px 8px}canvas{display:block;background:#030207;border-radius:4px;image-rendering:pixelated}</style></head><body>
+<header><h1>ハーケンの見た目 — 案3つ。左＝渡す場面（大）、中＝HUD の印、右＝床に打った状態（1マス＝40px、暗い床）</h1><p>どの案も同じ絵を3か所で使う。火は打ったあとに灯る。</p></header>
+<div class="row" id="row"></div>
+<script>
+const PAL={'.':null,k:'#1a1512',m:'#8e94a0',M:'#c9ced8',d:'#4a4f5a',g:'#d8a84a',G:'#f4d585',o:'#ff8a3a',y:'#ffe08a',w:'#fff6d8',r:'#8a5a34',R:'#b07a48'};
+const SP={
+A:{name:'A. 登山ハーケン',note:'くさび形の金属。上のリングの中に火が灯る。「打つ」道具そのもの。',
+ fire:[5,2],rows:[
+'....mmmm....',
+'...mMkkMm...',
+'...mk..km...',
+'...mk..km...',
+'...mMkkMm...',
+'....mmmm....',
+'....dMMd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'.....dMd....',
+'.....dMd....',
+'.....dm.....',
+'.....dm.....',
+'......d.....']},
+B:{name:'B. 火の杭',note:'金の頭の杭。頭の上に火。今の足元の印の延長で、一番読みやすい。',
+ fire:[5,0],rows:[
+'............',
+'............',
+'....gGGg....',
+'...gGGGGg...',
+'....gGGg....',
+'....dMMd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'.....dMd....',
+'.....dm.....',
+'.....dm.....',
+'......d.....']},
+C:{name:'C. 縄つきハーケン',note:'ハーケンに縄の輪。縄の結び目に火。「命綱」の感じ。少しごちゃつく。',
+ fire:[8,3],rows:[
+'....mmmm....',
+'...mMkkMm...',
+'...mk..km..r',
+'...mMkkMmrR.',
+'....mmmmR...',
+'....dMMdr...',
+'....dMmdR...',
+'....dMmd.r..',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'....dMmd....',
+'.....dMd....',
+'.....dm.....',
+'.....dm.....',
+'......d.....']}};
+function sprite(ctx,s,x,y,z,lit,t){
+  s.rows.forEach((row,j)=>[...row].forEach((c,i)=>{ if(PAL[c]){ ctx.fillStyle=PAL[c]; ctx.fillRect(x+i*z,y+j*z,z,z);} }));
+  if(lit){ const [fx,fy]=s.fire, cx=x+(fx+.5)*z+ (s===SP.C?0:0), cy=y+(fy+1)*z; const fl=1+Math.sin(t*9)*.1;
+    ctx.fillStyle=PAL.o; ctx.beginPath(); ctx.moveTo(cx-z*.9,cy); ctx.quadraticCurveTo(cx-z*.8,cy-z*2*fl,cx,cy-z*3.2*fl); ctx.quadraticCurveTo(cx+z*.8,cy-z*2*fl,cx+z*.9,cy); ctx.closePath(); ctx.fill();
+    ctx.fillStyle=PAL.y; ctx.beginPath(); ctx.moveTo(cx-z*.45,cy); ctx.quadraticCurveTo(cx-z*.4,cy-z*1.2,cx,cy-z*1.9*fl); ctx.quadraticCurveTo(cx+z*.4,cy-z*1.2,cx+z*.45,cy); ctx.closePath(); ctx.fill();
+    ctx.fillStyle=PAL.w; ctx.fillRect(cx-z*.2,cy-z*.9,z*.4,z*.5); }
+}
+function glow(ctx,x,y,r,a){ const g=ctx.createRadialGradient(x,y,0,x,y,r); g.addColorStop(0,'rgba(255,170,70,'+a+')'); g.addColorStop(1,'rgba(255,170,70,0)'); ctx.fillStyle=g; ctx.fillRect(x-r,y-r,r*2,r*2); }
+const row=document.getElementById('row');
+for(const k of ['A','B','C']){ const s=SP[k]; const d=document.createElement('div'); d.className='card'; d.innerHTML='<h2>'+s.name+'</h2><p>'+s.note+'</p>';
+  const c=document.createElement('canvas'); c.width=280; c.height=170; d.appendChild(c); row.appendChild(d); const ctx=c.getContext('2d');
+  ctx.fillStyle='#030207'; ctx.fillRect(0,0,280,170);
+  // 渡す場面：暗闇に窓っぽい枠、大きく
+  ctx.strokeStyle='#3a3548'; ctx.strokeRect(8.5,8.5,100,150); ctx.fillStyle='#0d0a16'; ctx.fillRect(9,9,99,149);
+  glow(ctx,58,84,70,.18); sprite(ctx,s,58-36,84-48,6,false,0);
+  ctx.fillStyle='#e8e2d6'; ctx.font='11px ui-monospace,monospace'; ctx.textAlign='center'; ctx.fillText('渡す場面',58,150);
+  // HUD
+  ctx.fillStyle='#0d0a16'; ctx.fillRect(120,9,80,50); sprite(ctx,s,126,12,2,false,0); ctx.fillStyle='#ffc46b'; ctx.font='bold 16px ui-monospace,monospace'; ctx.textAlign='left'; ctx.fillText('×5',156,38);
+  ctx.fillStyle='#e8e2d6'; ctx.font='11px ui-monospace,monospace'; ctx.textAlign='center'; ctx.fillText('HUD',160,72);
+  // 床（1マス40px）
+  const fx=120,fy=90; for(let i=0;i<4;i++)for(let j=0;j<2;j++){ ctx.fillStyle=(i+j)%2?'#0b0913':'#0e0b17'; ctx.fillRect(fx+i*40,fy+j*40,40,40); }
+  ctx.strokeStyle='#1c1826'; ctx.strokeRect(fx+.5,fy+.5,160,80);
+  const tx=fx+60,ty=fy+40; glow(ctx,tx,ty,28,.35); sprite(ctx,s,tx-12,ty-16,2,true,0.4);
+  // 主人公（ベイビー）の目安：小さな光の玉
+  glow(ctx,fx+130,ty,22,.5); ctx.fillStyle='#ffe9b0'; ctx.beginPath(); ctx.arc(fx+130,ty,6,0,7); ctx.fill();
+  ctx.fillStyle='#7d7566'; ctx.font='10px ui-monospace,monospace'; ctx.textAlign='center'; ctx.fillText('床に打った（右はベイビー）',fx+80,fy+80+14);
+}
+</script></body></html>
