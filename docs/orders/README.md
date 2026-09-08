@@ -32,6 +32,7 @@ Codexへ渡した／渡す実装指示書の保管場所です。
 | `2026-09-07_haken_v2.md` | ハーケン便 | v2 | **実装済み** | v1 の指摘を反映し、`game/underborn_scout7d.html`へ反映。ブラウザ確認済み |
 | `2026-09-07_ascent-residents_v1.md` | 昇階・住民便 | v1 | **上書き済み** | レビュー用 Sol の指摘13点（描画関数の実在／色の補間／ENEMY_INFO の行／字数／I・L・T／紹介帯の衝突／最終階の解放／重複加算／activeRun と clearRun／進化判定の順／断面図の階／節目の判定／DECISIONS の重複）|
 | `2026-09-07_ascent-residents_v2.md` | 昇階・住民便 | v2 | **実装済み** | v1 の指摘を反映し、`game/underborn_scout7e.html`へ反映。ブラウザ確認済み |
+| `2026-09-08_ignite-free_v1.md` | 点火無料便 | v1 | **実装済み** | 自分で灯してもハートを減らさない（案 A）を `game/underborn_scout7f.html` へ反映。ブラウザ確認済み |
 
 ## 便の分割について
 

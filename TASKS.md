@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout7e.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。昇階・住民便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout7f.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。点火無料便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -25,6 +25,7 @@
 - [x] **Codex（Sol）**：第7C便を `game/underborn_scout7c.html` として実装。支点設置・保存・ハート0復帰・「つづきから」をブラウザ確認（9-06）
 - [x] **Codex（Sol）**：ハーケン便を `game/underborn_scout7d.html` として実装。名称・打つ演出・火が絶える演出・初回授与をブラウザ確認（9-07）
 - [x] **Codex（Sol）**：昇階・住民便を `game/underborn_scout7e.html` として実装。初登場台詞・解放・通常昇階・節目カード・地上と森の住民列を反映（9-07）
+- [x] **Codex（Sol）**：点火無料便を `game/underborn_scout7f.html` として実装。自己点火のハート消費だけを外し、住民接触と種火連鎖をブラウザ確認（9-08）
 - [ ] **Codex**：一般配布用に `DEV_DEFAULT=false` へ戻し、DEV UI が出ないことを確認
 
 ## 次に行うこと（暫定行で進める。Kevin は却下だけ）
@@ -85,6 +86,7 @@
 - [x] 第7C便を `game/underborn_scout7c.html` として実装し、支点設置・保存・復帰・タイトル再開を反映する
 - [x] ハーケン便を `game/underborn_scout7d.html` として実装し、名称・打つ演出・火が絶える演出・初回授与を反映する
 - [x] 昇階・住民便を `game/underborn_scout7e.html` として実装し、解放住民の記録と列、階を上がる演出を反映する
+- [x] 点火無料便を `game/underborn_scout7f.html` として実装し、自己点火を無料にする
 
 ## 今回は行わないこと
 
