@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8b.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版のエンディングと周回まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout8c.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の区画内反転、エンディング、周回まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -21,7 +21,7 @@
 - [x] **Codex（Sol）**：初回プレイ hotfix を `game/underborn_scout7h.html` として実装。授与前のハーケン、女神の二択入力、暗闇上の穴を修正（9-09）
 - [x] **Codex（Sol）**：遺跡16階便を `game/underborn_scout8a.html` として実装。4区画、休憩所、9F・13F進化、保存復帰を反映（9-09）
 - [x] **Codex（Sol）**：エンディング便を `game/underborn_scout8b.html` として実装。本番を遺跡だけにし、詩・女神・初変身・住民列・周回と足音を接続（9-10）
-- [ ] **Codex（Sol）**：`docs/orders/2026-09-10_mirror-floors_v1.md` の区画内反転便を実装
+- [x] **Codex（Sol）**：`docs/orders/2026-09-10_mirror-floors_v2.md` を `game/underborn_scout8c.html` へ実装。地図・祭壇・巡回点・開始位置の4反転と保存版 `layout:2` を反映（9-10）
 - [ ] **Astra（別タスク、Kevin が起動）**：遺跡16階を通し、所要時間・区画ごとの反復感・休憩所の間・ハーケン本数を測る
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
@@ -96,6 +96,7 @@
 - [x] 初回プレイ hotfix を `game/underborn_scout7h.html` として実装する
 - [x] 遺跡16階便を `game/underborn_scout8a.html` として実装する
 - [x] エンディング便を `game/underborn_scout8b.html` として実装する
+- [x] 区画内反転便を `game/underborn_scout8c.html` として実装する
 
 ## 今回は行わないこと
 
