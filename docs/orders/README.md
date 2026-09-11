@@ -44,6 +44,7 @@ Codexへ渡した／渡す実装指示書の保管場所です。
 | `2026-09-10_mirror-floors_v2.md` | 反転便 | v2 | **実装済み** | `game/underborn_scout8c.html` に、区画内4階の元／左右／上下／両方反転、16配置検証、保存版 `layout:2` を反映 |
 | `2026-09-10_ninth-floor-hotfix_v1.md` | 9F hotfix | v1 | **実装済み** | `game/underborn_scout8d.html` に、到着直後の安全、進化儀式のラン内1回化、穴へのカメラ寄せとミニマップ強調、大広間4配置を反映 |
 | `2026-09-11_ending-pace_v1.md` | 余韻便 | v1 | **実装済み** | Kevin 通し1周の感想3点を `game/underborn_scout8e.html` へ反映：16F「最上階」＋手動退出＋長い浮上＋地上歩行／休憩所の会話＋記録石／旅の果ての3数字（点数なし） |
+| `2026-09-11_auto-pin-hidden_v1.md` | 0本目 hotfix | v1 | **実装済み** | 自動で打たれた通常階の0本目を、そこへ戻るまで床・ミニマップから隠す修正を `game/underborn_scout8f.html` へ反映。休憩所の自動杭とHUD本数は維持 |
 
 ## 便の分割について
 

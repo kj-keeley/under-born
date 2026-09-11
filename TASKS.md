@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8e.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の余韻便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout8f.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の0本目 hotfixまで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -25,6 +25,7 @@
 - [x] **Astra（別タスク、Kevin が起動）**：遺跡1〜8Fと9F再挑戦まで通し、操作環境の制約により45分で中断。観察4点をhotfixへ渡した（9-10）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-10_ninth-floor-hotfix_v1.md` を `game/underborn_scout8d.html` へ実装。開始直後の安全、儀式のラン内1回化、穴カメラ、大広間4配置を反映（9-11）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-11_ending-pace_v1.md` を `game/underborn_scout8e.html` へ実装。最上階の手動退出、長い浮上と地上歩行、休憩所の会話と記録石、旅の3数字を反映（9-11）
+- [x] **Codex（Sol）**：`docs/orders/2026-09-11_auto-pin-hidden_v1.md` を `game/underborn_scout8f.html` へ実装。自動設置した通常階の0本目を復帰まで床・ミニマップから隠す（9-11）
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
@@ -102,6 +103,7 @@
 - [x] 区画内反転便を `game/underborn_scout8c.html` として実装する
 - [x] 9F hotfix を `game/underborn_scout8d.html` として実装する
 - [x] 余韻便を `game/underborn_scout8e.html` として実装する
+- [x] 0本目 hotfix を `game/underborn_scout8f.html` として実装する
 
 ## 今回は行わないこと
 
