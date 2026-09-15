@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8j.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の部屋便②まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout8k.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の店の流れ便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -30,6 +30,7 @@
 - [x] **Codex（Sol）**：`docs/orders/2026-09-12_pincer-altar_v2.md` を `game/underborn_scout8h.html` へ実装。9F以降のはさみ型ペアと、5F以降の逃げる祭壇を反映（9-12）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-12_room1_v2.md` を `game/underborn_scout8i.html` へ実装。火の粒、部屋の主の店、鉢5つ、絵3種、鳥の模型、周回保存を反映（9-13）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-14_room2_v2.md` を `game/underborn_scout8j.html` へ実装。遺跡地上の浄化、木・絵・鳥との連動、「旅の果て」と周回背景への保持を反映（9-14）
+- [x] **Codex（Sol）**：`docs/orders/2026-09-14_shop-flow_v1.md` を `game/underborn_scout8k.html` へ実装。店の連続購入と閉じ方、はさみ型を9・10・13・14Fだけにする編成を反映（9-15）
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
@@ -112,6 +113,7 @@
 - [x] 挟む住民・逃げる祭壇便を `game/underborn_scout8h.html` として実装する
 - [x] 部屋便①を `game/underborn_scout8i.html` として実装する
 - [x] 部屋便②を `game/underborn_scout8j.html` として実装する
+- [x] 店の流れ便を `game/underborn_scout8k.html` として実装する
 
 ## 今回は行わないこと
 
