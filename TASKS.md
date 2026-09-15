@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8l.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の台詞便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout8m.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の公開スイッチ便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -32,6 +32,7 @@
 - [x] **Codex（Sol）**：`docs/orders/2026-09-14_room2_v2.md` を `game/underborn_scout8j.html` へ実装。遺跡地上の浄化、木・絵・鳥との連動、「旅の果て」と周回背景への保持を反映（9-14）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-14_shop-flow_v1.md` を `game/underborn_scout8k.html` へ実装。店の連続購入と閉じ方、はさみ型を9・10・13・14Fだけにする編成を反映（9-15）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-15_lines_v1.md` を `game/underborn_scout8l.html` へ実装。最終台詞、進化音、休憩所の主と会話表示、仮の店、浄化完了の一行を反映（9-15）
+- [x] **Codex（Sol）**：`docs/orders/2026-09-15_release-switch_v1.md` を `game/underborn_scout8m.html` へ実装。公開既定で開発UIと詳細HUDを隠し、`?dev=1` と版番号を反映（9-15）
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
@@ -40,7 +41,7 @@
 - [x] **Codex（Sol）**：昇階・住民便を `game/underborn_scout7e.html` として実装。初登場台詞・解放・通常昇階・節目カード・地上と森の住民列を反映（9-07）
 - [x] **Codex（Sol）**：点火無料便を `game/underborn_scout7f.html` として実装。自己点火のハート消費だけを外し、住民接触と種火連鎖をブラウザ確認（9-08）
 - [x] **Codex（Sol）**：穴とハーケンの絵便を `game/underborn_scout7g.html` として実装。通常階の手動昇階、安全状態、縄つきハーケンの授与・HUD・床表示をブラウザ確認（9-08）
-- [ ] **Codex**：一般配布用に `DEV_DEFAULT=false` へ戻し、DEV UI が出ないことを確認
+- [x] **Codex**：一般配布用に `DEV_DEFAULT=false` へ戻し、素のURLでDEV UIが出ず、`?dev=1` で従来表示へ戻ることを確認（9-15）
 
 ## 次に行うこと（暫定行で進める。Kevin は却下だけ）
 
