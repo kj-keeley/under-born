@@ -2,8 +2,8 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8m.html`）。
-**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の公開スイッチ便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
+ゲームは既に遊べる状態にある（`game/underborn_scout8n.html`）。
+**2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版の点火タップ試作便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
 
@@ -33,6 +33,7 @@
 - [x] **Codex（Sol）**：`docs/orders/2026-09-14_shop-flow_v1.md` を `game/underborn_scout8k.html` へ実装。店の連続購入と閉じ方、はさみ型を9・10・13・14Fだけにする編成を反映（9-15）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-15_lines_v1.md` を `game/underborn_scout8l.html` へ実装。最終台詞、進化音、休憩所の主と会話表示、仮の店、浄化完了の一行を反映（9-15）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-15_release-switch_v1.md` を `game/underborn_scout8m.html` へ実装。公開既定で開発UIと詳細HUDを隠し、`?dev=1` と版番号を反映（9-15）
+- [x] **Codex（Sol）**：`docs/orders/2026-09-16_ignite-tap_v2.md` を `game/underborn_scout8n.html` へ実装。拍に合わせた短いタップ／Enter、段階別必要数、外れ減算、新旧切替を反映（9-16）
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
