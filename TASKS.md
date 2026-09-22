@@ -2,7 +2,7 @@
 
 ## 現在の段階
 
-ゲームは既に遊べる状態にある（`game/underborn_scout8q.html`）。
+ゲームは既に遊べる状態にある（`game/underborn_scout8r.html`）。
 **2026-09-03 に中断を解除**（DECISIONS 運用・体制）。遺跡単独版のライター便まで実装済み。以後は便を Kevin 待ち無しで連続実行し、Kevin は最終決定4つだけを持つ。
 
 ## 進行中（担当を AI に付け替え。2026-09-03）
@@ -37,6 +37,7 @@
 - [x] **Codex（Sol）**：`docs/orders/2026-09-17_ignite-lighter_v2.md` を `game/underborn_scout8o.html` へ実装。自分のテンポで叩く点火、燠と粒、連鎖中の保持、カメラと描画だけの膨らみを反映（9-18）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-18_lighter-hold-hotfix_v1.md` を `game/underborn_scout8p.html` へ実装。連鎖ポーズ・送り先選択で比較間隔を捨て、保留中／後の次の1打を必ず当たるよう修正（9-18）
 - [x] **Codex（Sol）**：`docs/orders/2026-09-21_lantern_v2.md` を `game/underborn_scout8q.html` へ実装。9〜16Fの祭壇を横揺れの吊り灯籠にし、真ん中打ち、保留中の時計停止、収束演出、開発調整を反映（9-22）
+- [x] **Codex（Sol）**：`docs/orders/2026-09-22_breath-toggle_v1.md` を `game/underborn_scout8r.html` へ実装。息止めをQ／スペース・HUD・マスター長押しのトグルへ統一し、点火中のカメラをベイビー中心へ固定（9-22）
 - [ ] **Codex（プレイ検品）**：息止め移動比率0〜1／捜索2秒／狭通路・行き止まり・複数敵の3点を実プレイし、不自然な点を HANDOFF「実装側の感触」に書く。既定値のまま通るなら暫定行を書かない
 - [ ] **Claude**：7B-b3 の検品（diff 読み）。断面図の表示契機は HANDOFF の答え（`drawCrossSection` の呼び出しが無い）を確認して閉じる
 - [x] **Claude**：第7C便の発注文を書く（支点一式、v2レビュー反映済み）（9-06）
